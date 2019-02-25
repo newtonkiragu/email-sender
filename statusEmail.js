@@ -1,14 +1,14 @@
-const csv= require("csvtojson")
+const csv = require("csvtojson")
 const nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 require('dotenv').config()
 
 // this may be vulnearable to MITM attacks, remember to enable less-secure on google.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-const authEmail={
-  user:process.env.EMAIL_USER,
-  pass:process.env.EMAIL_PASSWORD,
+const authEmail = {
+  user: process.env.EMAIL_USER,
+  pass: process.env.EMAIL_PASSWORD,
 }
 
 var transporter = nodemailer.createTransport(smtpTransport({
@@ -23,11 +23,11 @@ var notOnTrack = `
 `
 
 
-var sendMail= function(d){
-    //Check for yes or no on recommendation
-  if (d['First Recommendation']==='Yes'){
-      text=`
-Hello ${d["Student"]}
+var sendMail = function (d) {
+  //Check for yes or no on recommendation
+  if (d['First Recommendation'] === 'Yes') {
+    text = `
+Hello ${d["Name"]}
 
 To give you an update on how you are doing in class, you are currently on track to move forward to the next module.
     
@@ -55,9 +55,9 @@ https://goo.gl/forms/0IirlKjvqZ7Qwyt72
 Best,
 -Classroom Team.
       `;
-  }else{
-      text=`
-Hello ${d["Student"]}
+  } else {
+    text = `
+Hello ${d["Name"]}
 
 To give you an update on how you are doing in class, you are currently not on track to move forward to the next module but have an opportunity to improve before final decisions are made. Please continue reading to understand why this is, and how you can improve.
 
@@ -89,25 +89,25 @@ Best,
   var mailOptions = {
     from: authEmail.user,
     to: d["Email"],
-    cc: ['andrew.anampiu@moringaschool.com','boyd.ndonga@moringaschool.com','ashley.zawadi@moringaschool.com','samora.yommie@moringaschool.com'],
-    subject:  `A Quick Status Update`,
+    cc: ['andrew.anampiu@moringaschool.com', 'boyd.ndonga@moringaschool.com', 'ashley.zawadi@moringaschool.com', 'samora.yommie@moringaschool.com'],
+    subject: `A Quick Status Update`,
     text: text
   };
   //Error logging
-  transporter.sendMail(mailOptions, function(error, info){
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
     } else {
       console.log('Email sent: ' + info.response);
     }
   });
-  
+
 }
 
 //Read from CSV and send emails
-csv().fromFile('data.csv').then((j)=>{
-    const data=j
-    for (i=0; i<data.length;i++){
-      sendMail(data[i])
-    }
+csv().fromFile('data.csv').then((j) => {
+  const data = j
+  for (i = 0; i < data.length; i++) {
+    sendMail(data[i])
+  }
 })
