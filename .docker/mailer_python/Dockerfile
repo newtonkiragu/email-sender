@@ -13,7 +13,7 @@ ENV ENVIRONMENT production
 ENV PYTHONUNBUFFERED 1
 
 # Exporse a specific port
-ENV PORT 8000
+ENV PORT 8080
 
 # Expose the number of workers based on CPU
 ENV WORKERS 1
@@ -26,4 +26,4 @@ WORKDIR /opt/mailer_python
 ADD ./mailer_python /opt/mailer_python
 RUN pip3 install -r requirements.txt
 EXPOSE ${PORT}
-CMD ["python3", "manage.py"]
+CMD ["python3", "manage.py","--noauth_local_webserver"]
