@@ -1,3 +1,1 @@
-Student,Email,IP1 /20,IP2 /24,IP3/,IP4/,Attendance /100,First Recommendation,Reason(first recommendation),Final Recommendation,Reason(last recommendation)
-"Waruguru Naomi",anampiuandrew4@gmail.com,11,20,,,100,Yes,,,
-"Hassan, Mohamed",andrew.anampiu@moringaschool.com,11,24,,,83,No,Attendance,,
+Name,Email,IP1 /31,IP2 /28,IP3 /21,IP4 /22, Attendance /100,First Recommendation,Reason(first recommendation),Last Recomendation,Reason(last recommendation),,
