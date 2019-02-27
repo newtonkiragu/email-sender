@@ -1,0 +1,22 @@
+version: "1.1"
+
+
+networks:
+  mailer:
+    driver: bridge
+
+services:
+  core:
+    container_name: "mailer-python"
+    build:
+      context: .
+      dockerfile: .docker/mailer_python/Dockerfile
+    env_file: 
+      - ./mailer_python/.env
+    networks:
+      - aspired
+    ports:
+      - 8000:8000
+    volumes:
+      - ./core:/opt/core
+    depends_o
