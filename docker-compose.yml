@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  mailer:
+    driver: bridge
+
+services:
+  mailer:
+    container_name: "mailer-python"
+    build:
+      context: .
+      dockerfile: .docker/mailer_python/Dockerfile
+    env_file: 
+      - ./mailer_python/.env
+    networks:
+      - mailer
+    ports:
+      - 8080:8080
+    volumes:
+      - ./mailer_python:/opt/mailer_python
+  
