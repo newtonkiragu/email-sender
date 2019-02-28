@@ -19,12 +19,14 @@ class AbstractGmailHandler(abc.ABC):
 class GmailHandler(AbstractGmailHandler):
     '''
     Gmail api 
-        reference: https://developers.google.com/gmail/api/v1/reference
+        reference: 
+                https://developers.google.com/gmail/api/v1/reference
+                https://medium.com/lyfepedia/sending-emails-with-gmail-api-and-python-49474e32c81f
         to impelement more methods
     '''
     service=None
 
-    def create_service(self,credentials,service=None):
+    def create_service(self,credentials,service=None,delegated_email=None):
         '''
         Creates a service instance
         args:
@@ -33,6 +35,8 @@ class GmailHandler(AbstractGmailHandler):
             gmail service instance
         '''
         if not service:
+            if delegated_email:
+                credentials=credentials.with_subject(delegated_email)
             service=discovery.build("gmail","v1",credentials=credentials)
         self.service=service
         return self.service
@@ -120,17 +124,17 @@ class GmailHandler(AbstractGmailHandler):
         Returns:
             Sent Message.
         """
-        try:
-            if not batch:
-                return (self.service.users().messages().send(userId=userId, body=message)
-                        .execute())
-            else:
-                return self.service.users().messages().send(userId=userId, body=message)
-        except Exception as e:
-            print("Error: {}".format(e))
-            return False
+        # try:
+        if not batch:
+            return (self.service.users().messages().send(userId=userId, body=message)
+                    .execute())
+        else:
+            return self.service.users().messages().send(userId=userId, body=message)
+        # except Exception as e:
+        #     print("Error: {}".format(e))
+        #     return False
 
-    def list_messages(self,userId="me",maxResults=100,labelIds=[],q=""):
+    def list_messages(self,userId="me",maxResults=100,labelIds=[],q="",batch=False):
         '''
         list user messages
         args(optional):
@@ -142,12 +146,14 @@ class GmailHandler(AbstractGmailHandler):
             retrieved list of messages
         '''
         try:
+            if batch:
+                return self.service.users().messages().list(userId=userId,maxResults=maxResults)
             return self.service.users().messages().list(userId=userId,maxResults=maxResults).execute()
         except Exception as e:
             print("Error: {}".format(e))
             return False
 
-    def get_message(self,id,userId="me"):
+    def get_message(self,id,userId="me",batch=False):
         '''
         get specified message
 
@@ -158,6 +164,8 @@ class GmailHandler(AbstractGmailHandler):
             message object
         '''
         try:
+            if batch:
+                return self.service.users().messages().get(id=id,userId=userId)
             return self.service.users().messages().get(id=id,userId=userId).execute()
         except Exception as e:
             print("Error: {}".format(e))
